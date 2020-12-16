@@ -7,15 +7,15 @@ const {
   xpToLevel
 } = require('../util/');
 
-module.exports = async (message, user, skill) => {
+module.exports = async (messageReplyHandler, user, skill) => {
   const users = new Users();
   const hasSpace = Users.hasSpace(user.inventory);
   if (!hasSpace) {
-    return; // Inventory full send message
+    return messageReplyHandler.inventoryFull();
   }
-
+  
   await users.setTraining(user._id, true);
-
+  messageReplyHandler.isTraining();
   const skillTools = skill_data[skill].tools;
   const skillRewards = skill_data[skill].rewards;
 
@@ -37,7 +37,6 @@ module.exports = async (message, user, skill) => {
   await users.addItems(user, randomReward.name, randomRewardQuantity);
   await users.setSkillXp(user, skill, newXp);
 
-  const messageReplyHandler = new MessageReplyHandler(message);
   messageReplyHandler.skillTrainedSuccess(
     skill,
     gainedXp,

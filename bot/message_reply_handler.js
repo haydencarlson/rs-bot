@@ -20,10 +20,27 @@ class MessageReplyHandler {
         },
       ])
       .setFooter(`This action took ${actionDelay / 1000} seconds`);
-    this.sendReply();
+    this._sendEmbed();
   }
 
-  sendReply() {
+  inventoryFull() {
+    this._sendMessage(`${this.message.author.username} your inventory is full.`)
+  }
+
+  registerSuccess() {
+    this._sendMessage(`${this.message.author.username} registered successfully.`);
+  }
+  
+  isTraining() {
+    this._sendMessage(`${this.message.author.username} is woodcutting.`);
+  }
+
+  _sendMessage(message) {
+    this.message.channel.send(message);
+    this.message.delete();
+  }
+
+  _sendEmbed() {
     this.message.channel.send(this.embed);
   }
 }
