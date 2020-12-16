@@ -1,5 +1,4 @@
 const Users = require('../db/collections/users');
-const { Message } = require('discord.js');
 const MessageReplyHandler = require('./message_reply_handler');
 const { skill_data } = require('../config');
 const { 
@@ -22,7 +21,6 @@ module.exports = async (message, user, skill) => {
 
   const currentXp = Users.getSkillCurrentXp(user.statistics, skill);
 
-  const skillData = skill_data[skill];
   const randomTool = skillTools[randomNumber(0, skillTools.length - 1)];
   const randomReward = skillRewards[randomNumber(0, skillRewards.length - 1)];
   const randomRewardQuantity = Users.getRandomRewardQuantity(user);
