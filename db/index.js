@@ -9,6 +9,7 @@ class DB {
   async connect() {
     const client = await MongoClient.connect(process.env.MONGO_URL, {
       keepAlive: true,
+      useUnifiedTopology: true
     });
     this.client = client;
     this.db = client.db(process.env.DATABASE_NAME);

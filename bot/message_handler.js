@@ -21,6 +21,6 @@ module.exports = async (message) => {
   };
 
   if (command_to_skill[command]) {
-    trainSkill(user, command_to_skill[command]);
+    trainSkill(message, user, command_to_skill[command]);
   }
 };

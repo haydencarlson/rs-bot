@@ -1,11 +1,14 @@
 const Users = require('../db/collections/users');
+const { Message } = require('discord.js');
+const MessageReplyHandler = require('./message_reply_handler');
 const { skill_data } = require('../config');
 const { 
   randomNumber, 
-  sleep 
+  sleep,
+  xpToLevel
 } = require('../util/');
 
-module.exports = async (user, skill) => {
+module.exports = async (message, user, skill) => {
   const users = new Users();
   const hasSpace = Users.hasSpace(user.inventory);
   if (!hasSpace) {
@@ -19,6 +22,7 @@ module.exports = async (user, skill) => {
 
   const currentXp = Users.getSkillCurrentXp(user.statistics, skill);
 
+  const skillData = skill_data[skill];
   const randomTool = skillTools[randomNumber(0, skillTools.length - 1)];
   const randomReward = skillRewards[randomNumber(0, skillRewards.length - 1)];
   const randomRewardQuantity = Users.getRandomRewardQuantity(user);
@@ -28,10 +32,19 @@ module.exports = async (user, skill) => {
     randomNumber(randomReward.delay[0], randomReward.delay[1]);
   const gainedXp = randomXp + (randomReward.xp * randomRewardQuantity);
   const newXp = currentXp + gainedXp;
+  const newLevel = xpToLevel(newXp);
 
   await sleep(actionDelay);
 
   await users.addItems(user, randomReward.name, randomRewardQuantity);
   await users.setSkillXp(user, skill, newXp);
 
+  const messageReplyHandler = new MessageReplyHandler(message);
+  messageReplyHandler.skillTrainedSuccess(
+    skill,
+    gainedXp,
+    actionDelay,
+    newLevel,
+    newXp
+  );
 };
