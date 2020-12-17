@@ -1,23 +1,38 @@
-const { MessageEmbed, Message } = require('discord.js');
-const { skill_data } = require('../config');
-const { firstToUpper, kFormatter } = require("../util/");
+const { MessageEmbed } = require('discord.js');
+const { skill_data } = require('../../config');
+const { firstToUpper, kFormatter } = require("../../util");
 class MessageReplyHandler {
   constructor(message) {
     this.message = message;
     this.embed = new MessageEmbed();
   }
 
-  skillTrainedSuccess(skill, gainedXp, actionDelay, newLevel, newXp) {
+  skillTrainedSuccess({
+    skill, 
+    gainedXp, 
+    actionDelay, 
+    newLevel, 
+    newXp,
+    randomRewardQuantity,
+    randomReward,
+    randomTool,
+    inventorySpaceUsed
+  }) {
     const skillData = skill_data[skill];
     this.embed
       .setTitle(firstToUpper(skill))
       .setAuthor(this.message.author.username, this.message.author.avatarURL())
       .addFields([
         {
-          name: ` **${newLevel}/99** (${kFormatter(newXp)} xp)`,
+          name: `<:Woodcutting:784545972386398248> **${newLevel}/99** (${kFormatter(newXp)} xp)`,
           value: `You gained ${gainedXp} experience from training ${skill}`,
           inline: true,
         },
+        {
+          name: 'Resource',
+          value: `${randomRewardQuantity} __${randomReward.name}__ were gathered by using a ${randomTool.name}.\n
+          You have used **${inventorySpaceUsed}/28** inventory spaces`
+        }
       ])
       .setFooter(`This action took ${actionDelay / 1000} seconds`);
     this._sendEmbed();

@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const handleMessage = require('./message_handler');
+const handleMessage = require('./messageHandler/');
 
 module.exports = () => {
   client.login(process.env.BOT_TOKEN);

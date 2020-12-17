@@ -36,7 +36,7 @@ class Users extends Base {
     if (user.inventory.length <= 21) {
       return randomNumber(1, 7);
     }
-    return 1;
+    return randomNumber(1, 28 - user.inventory.length);
   }
 
   static getSkillCurrentXp(statistics, skill) {
